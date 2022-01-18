@@ -7,19 +7,23 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.ts"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "*.json"
+    ]
+  },
   "author": "Rishub Handa",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^17.0.8",
     "axios": "^0.24.0",
     "dotenv": "^12.0.3",
+    "ethers": "^5.5.3",
+    "fs": "^0.0.1-security",
     "node-emoji": "^1.11.0",
     "nodemon": "^2.0.15",
     "ts-node": "^10.4.0",
-    "twit": "^2.2.11",
-    "twitter-api-client": "^1.5.1",
     "twitter-api-v2": "^1.9.1",
-    "twitter-lite": "^1.1.0",
     "typescript": "^4.5.4"
   }
 }
