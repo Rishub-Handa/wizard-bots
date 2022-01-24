@@ -43,7 +43,7 @@ async function botTick() {
   if (minutesLeft <= 15 && timeSinceLastAuctionEndingTweet > MILLISECONDS_IN_23_HOURS) {
     console.log('Tweeting auction ending soon');
     // DEV: uncomment 
-    // twitterClient.v1.tweet(getAuctionEndingMessage());
+    twitterClient.v1.tweet(getAuctionEndingMessage());
 
     // Update the last time this tweet was sent 
     cache.lastTimeSentAuctionEndingSoon = (new Date()).getTime();
@@ -59,7 +59,7 @@ async function botTick() {
     const closingPricesMsg = getAuctionClosingPriceMessage(wizardIds[0], closingPrices);
 
     // DEV: uncomment 
-    // twitterClient.v1.tweet(getAuctionEndingMessage());
+    twitterClient.v1.tweet(getAuctionEndingMessage());
     cache.lastTimeSentClosingPrices = (new Date()).getTime();
     cache.wizardIds = wizardIds;
   }
