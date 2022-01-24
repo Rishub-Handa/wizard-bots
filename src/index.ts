@@ -69,7 +69,7 @@ async function botTick() {
 
 }
 
-botTick();
+// botTick();
 
 // DEV: uncomment 
-// setInterval(async () => botTick(), 3000);
+setInterval(async () => botTick(), 3000);
