@@ -67,7 +67,7 @@ export async function getAuctionInfo(): Promise<{ minutesLeft: number, wizardIds
 export async function getClosingPrices(): Promise<number[]> {
 
   const connectionURL = process.env.MAINNET_RPC_URI;
-  console.log("url: ", connectionURL);
+  // console.log("url: ", connectionURL);
 
   const provider = new ethers.providers.JsonRpcProvider(connectionURL);
   const auctionHouseContract = new ethers.Contract(auctionHouseAddress, auctionHouseABI, provider);

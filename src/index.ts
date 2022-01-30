@@ -59,7 +59,7 @@ async function botTick() {
     const closingPricesMsg = getAuctionClosingPriceMessage(wizardIds[0], closingPrices);
 
     // DEV: uncomment 
-    twitterClient.v1.tweet(getAuctionEndingMessage());
+    twitterClient.v1.tweet(closingPricesMsg);
     cache.lastTimeSentClosingPrices = (new Date()).getTime();
     cache.wizardIds = wizardIds;
   }
@@ -72,4 +72,4 @@ async function botTick() {
 // botTick();
 
 // DEV: uncomment 
-setInterval(async () => botTick(), 3000);
+setInterval(async () => botTick(), 300000);
