@@ -57,10 +57,24 @@ async function botTick() {
     const { bidAmounts, oldWizardIds } = await getClosingPrices();
     console.log("closing prices: ", bidAmounts);
     console.log("settled wizards: ", oldWizardIds); 
-    const closingPricesMsg = getAuctionClosingPriceMessage(oldWizardIds[0], bidAmounts);
+    const auctionNumber = ((oldWizardIds[0]-1)/6) + 1; 
+    console.log("auction number: ", auctionNumber); 
 
-    // DEV: uncomment 
-    // twitterClient.v1.tweet(closingPricesMsg);
+    const closingPricesMsg = getAuctionClosingPriceMessage(auctionNumber, oldWizardIds[0], bidAmounts);
+
+    // If no closing prices tweet ID, tweet the message directly 
+    // NOTE: I feel like this isn't break-proof. If we have to tweet it manually once, it will break the thread since the bot will reply to the previous tweet 
+    if(cache.closingPricesTweetID === "") {
+      // Save tweet ID
+      // DEV: uncomment 
+      const closingPricesTweet = await twitterClient.v1.tweet(closingPricesMsg);
+      cache.closingPricesTweetID = closingPricesTweet.id_str; 
+    } else {
+      // Otherwise reply to existing message and save tweet ID 
+      const closingPricesTweet = await twitterClient.v1.reply(closingPricesMsg, cache.closingPricesTweetID);
+      cache.closingPricesTweetID = closingPricesTweet.id_str; 
+    }
+
     cache.lastTimeSentClosingPrices = (new Date()).getTime();
     cache.wizardIds = newWizardIds;
   }

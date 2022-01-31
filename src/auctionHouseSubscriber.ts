@@ -86,7 +86,7 @@ export async function getClosingPrices(): Promise<{ bidAmounts: number[], oldWiz
 
   const latestSettledAuctions: ISettledAuction[] = settledAuctionEvents.slice(-5).map((e) => {
     return {
-      wizardId: parseFloat(ethers.utils.formatUnits(e?.args?.wizardId)) * (10 ** 18),
+      wizardId: Math.floor(parseFloat(ethers.utils.formatUnits(e?.args?.wizardId)) * (10 ** 18)),
       aId: parseFloat(ethers.utils.formatUnits(e?.args?.aId)) * (10 ** 18),
       winner: e?.args?.winner as string,
       amount: parseFloat(ethers.utils.formatUnits(e?.args?.amount)),
