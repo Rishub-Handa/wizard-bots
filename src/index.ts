@@ -43,7 +43,7 @@ async function botTick() {
   if (minutesLeft <= 15 && timeSinceLastAuctionEndingTweet > MILLISECONDS_IN_23_HOURS) {
     console.log('Tweeting auction ending soon');
     // DEV: uncomment 
-    twitterClient.v1.tweet(getAuctionEndingMessage());
+    await twitterClient.v1.tweet(getAuctionEndingMessage());
 
     // Update the last time this tweet was sent 
     cache.lastTimeSentAuctionEndingSoon = (new Date()).getTime();
@@ -66,10 +66,12 @@ async function botTick() {
     // NOTE: I feel like this isn't break-proof. If we have to tweet it manually once, it will break the thread since the bot will reply to the previous tweet 
     if(cache.closingPricesTweetID === "") {
       // Save tweet ID
+      console.log("creating tweet thread"); 
       // DEV: uncomment 
       const closingPricesTweet = await twitterClient.v1.tweet(closingPricesMsg);
       cache.closingPricesTweetID = closingPricesTweet.id_str; 
     } else {
+      console.log("replying to tweet thread"); 
       // Otherwise reply to existing message and save tweet ID 
       const closingPricesTweet = await twitterClient.v1.reply(closingPricesMsg, cache.closingPricesTweetID);
       cache.closingPricesTweetID = closingPricesTweet.id_str; 
