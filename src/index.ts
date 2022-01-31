@@ -32,9 +32,9 @@ async function botTick() {
 
   let cache = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf-8'));
 
-  const { minutesLeft, wizardIds } = await getAuctionInfo();
+  const { minutesLeft, newWizardIds } = await getAuctionInfo();
   console.log("minutesLeft: ", minutesLeft);
-  console.log("wizardIds: ", wizardIds);
+  console.log("wizardIds: ", newWizardIds);
 
   // Make sure this tweet hasn't already been sent for this auction (> 23hrs ago)
   const timeSinceLastAuctionEndingTweet = (new Date()).getTime() - cache.lastTimeSentAuctionEndingSoon;
@@ -43,7 +43,7 @@ async function botTick() {
   if (minutesLeft <= 15 && timeSinceLastAuctionEndingTweet > MILLISECONDS_IN_23_HOURS) {
     console.log('Tweeting auction ending soon');
     // DEV: uncomment 
-    twitterClient.v1.tweet(getAuctionEndingMessage());
+    // twitterClient.v1.tweet(getAuctionEndingMessage());
 
     // Update the last time this tweet was sent 
     cache.lastTimeSentAuctionEndingSoon = (new Date()).getTime();
@@ -51,17 +51,18 @@ async function botTick() {
   }
 
   // If the wizardIds are different than what's in the cache, send out closing price tweet 
-  if (JSON.stringify(wizardIds.sort()) !== JSON.stringify(cache.wizardIds.sort())) {
+  if (JSON.stringify(newWizardIds.sort()) !== JSON.stringify(cache.wizardIds.sort())) {
     console.log("new auction has started. sending out closing prices tweet");
 
-    const closingPrices = await getClosingPrices();
-    console.log("closing prices: ", closingPrices);
-    const closingPricesMsg = getAuctionClosingPriceMessage(wizardIds[0], closingPrices);
+    const { bidAmounts, oldWizardIds } = await getClosingPrices();
+    console.log("closing prices: ", bidAmounts);
+    console.log("settled wizards: ", oldWizardIds); 
+    const closingPricesMsg = getAuctionClosingPriceMessage(oldWizardIds[0], bidAmounts);
 
     // DEV: uncomment 
-    twitterClient.v1.tweet(closingPricesMsg);
+    // twitterClient.v1.tweet(closingPricesMsg);
     cache.lastTimeSentClosingPrices = (new Date()).getTime();
-    cache.wizardIds = wizardIds;
+    cache.wizardIds = newWizardIds;
   }
 
 
@@ -69,7 +70,7 @@ async function botTick() {
 
 }
 
-// botTick();
+botTick();
 
 // DEV: uncomment 
 setInterval(async () => botTick(), 300000);

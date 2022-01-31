@@ -7,7 +7,7 @@ const auctionHouseAddress = '0x418CbB82f7472B321c2C5Ccf76b8d9b6dF47Daba';
 const BLOCKS_PER_DAY = 8_000;
 
 
-export async function getAuctionInfo(): Promise<{ minutesLeft: number, wizardIds: number[] }> {
+export async function getAuctionInfo(): Promise<{ minutesLeft: number, newWizardIds: number[] }> {
 
   const connectionURL = process.env.MAINNET_RPC_URI;
   console.log("url: ", connectionURL);
@@ -54,17 +54,17 @@ export async function getAuctionInfo(): Promise<{ minutesLeft: number, wizardIds
   const timeLeft = endDatetime.getTime() - (new Date()).getTime();
   const minutesLeft = timeLeft / (1000 * 60);
 
-  const wizardIds = latestCreatedAuctions.map((auction) =>
-    parseFloat(ethers.utils.formatUnits(auction.wizardId)) * (10 ** 18));
+  const newWizardIds = latestCreatedAuctions.map((auction) =>
+    Math.floor(parseFloat(ethers.utils.formatUnits(auction.wizardId)) * (10 ** 18)));
 
-  return { minutesLeft, wizardIds };
+  return { minutesLeft, newWizardIds };
 
 
 }
 
 
 
-export async function getClosingPrices(): Promise<number[]> {
+export async function getClosingPrices(): Promise<{ bidAmounts: number[], oldWizardIds: number[] }> {
 
   const connectionURL = process.env.MAINNET_RPC_URI;
   // console.log("url: ", connectionURL);
@@ -96,6 +96,7 @@ export async function getClosingPrices(): Promise<number[]> {
   console.log(latestSettledAuctions);
 
   const bidAmounts = latestSettledAuctions.map((a) => a.amount);
-  return bidAmounts;
+  const oldWizardIds = latestSettledAuctions.map((a) => a.wizardId);
+  return { bidAmounts, oldWizardIds };
 
 }
