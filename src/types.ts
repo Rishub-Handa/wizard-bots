@@ -1,3 +1,4 @@
+import { Interface } from "ethers/lib/utils";
 
 export interface IAuction {
   wizardId: number,
@@ -6,6 +7,14 @@ export interface IAuction {
   endTime: number,
   oneOfOne: boolean,
   isWhitelistDay: boolean
+}
+
+export interface IBids {
+  wizardId: number,
+  aId: number,
+  sender: string,
+  value: number,
+  extended: boolean
 }
 
 
